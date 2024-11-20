@@ -1,16 +1,19 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
+    id("kotlinx-serialization")
 }
 
 android {
     namespace = "com.example.searchbooks"
-    compileSdk = 33
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.searchbooks"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -40,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {
@@ -61,7 +64,18 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.0-alpha06")
     implementation("androidx.navigation:navigation-compose:2.8.3")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("androidx.paging:paging-common-ktx:3.3.2")
+    implementation("androidx.paging:paging-compose:3.3.2")
+    implementation("androidx.paging:paging-runtime-ktx:3.3.2")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
