@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.searchbooks.feature.search.SearchScreen
+import com.example.searchbooks.feature.SearchBooksApp
 import com.example.searchbooks.ui.theme.SearchBooksTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,9 +20,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    SearchScreen(
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    SearchBooksApp()
                 }
             }
         }

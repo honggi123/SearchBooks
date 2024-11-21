@@ -30,6 +30,7 @@ class BookRepositoryImpl @Inject constructor(
         ).flow.map { pagingData ->
             pagingData.map {
                 Book(
+                    id = it.id,
                     title = it.bookDetails.title,
                     authors = it.bookDetails.authors,
                     publisher = it.bookDetails.publisher,
@@ -37,5 +38,18 @@ class BookRepositoryImpl @Inject constructor(
                 )
             }
         }
+    }
+
+    override suspend fun getBookById(id: String): Book {
+        val response = googleService.getBookDetailsById(id)
+        return Book(
+            id = response.id,
+            title = response.bookDetails.title,
+            authors = response.bookDetails.authors,
+            publisher = response.bookDetails.publisher,
+            description = response.bookDetails.description,
+            imageUrl = response.bookDetails.imageLinks?.thumbnail,
+            smallImageUrl = response.bookDetails.imageLinks?.smallThumbnail
+        )
     }
 }

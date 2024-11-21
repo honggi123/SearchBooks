@@ -1,17 +1,24 @@
 package com.example.searchbooks.data.network
 
-import com.example.searchbooks.data.network.response.GetSearchBooksResponse
+import com.example.searchbooks.data.network.response.GetBookDetailsResponse
+import com.example.searchbooks.data.network.response.GetSearchedBooksResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GoogleService {
 
     @GET("books/v1/volumes")
-    suspend fun getSearchBooks(
+    suspend fun getBooksByQuery(
         @Query("q") searchQuery: String,
         @Query("startIndex") start: Int,
         @Query("fields") fields: String = BASIC_BOOK_FIELDS,
-    ): GetSearchBooksResponse
+    ): GetSearchedBooksResponse
+
+    @GET("books/v1/volumes/{id}")
+    suspend fun getBookDetailsById(
+        @Path("id") id: String,
+    ): GetBookDetailsResponse
 
     companion object {
         const val BASIC_BOOK_FIELDS =

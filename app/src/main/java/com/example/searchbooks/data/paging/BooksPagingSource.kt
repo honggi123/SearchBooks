@@ -18,7 +18,7 @@ class BooksPagingSource(
         return try {
             val page = params.key ?: INITIAL_PAGE
 
-            val response = service.getSearchBooks(
+            val response = service.getBooksByQuery(
                 searchQuery = searchQuery,
                 start = page,
             )

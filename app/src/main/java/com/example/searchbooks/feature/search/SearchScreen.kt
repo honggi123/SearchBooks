@@ -1,8 +1,8 @@
 package com.example.searchbooks.feature.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,9 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.searchbooks.data.model.Book
@@ -28,6 +31,7 @@ import com.example.searchbooks.feature.component.ImageLoader
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
+    onBookClick: (Book) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
@@ -61,6 +65,7 @@ fun SearchScreen(
                 )
             } else {
                 SearchScreenContent(
+                    onBookClick = onBookClick,
                     pagingItems = books,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -101,25 +106,38 @@ private fun NotYetSearchedContent(
 
 @Composable
 private fun SearchScreenContent(
+    onBookClick: (Book) -> Unit,
     pagingItems: LazyPagingItems<Book>,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier
-    ) {
-        items(pagingItems.itemCount) { index ->
-            Column {
-                pagingItems[index]?.let {
-                    BookItem(
-                        book = it, modifier = Modifier.fillMaxWidth()
+    val isEmpty =
+        pagingItems.itemCount == 0 && pagingItems.loadState.refresh is LoadState.NotLoading
+
+    if (isEmpty) {
+        NoSearchedContent(
+            modifier = Modifier.fillMaxSize()
+        )
+    } else {
+        LazyColumn(
+            modifier = modifier
+        ) {
+            items(pagingItems.itemCount) { index ->
+                Column {
+                    pagingItems[index]?.let {
+                        BookItem(
+                            book = it,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onBookClick(it) }
+                        )
+                    }
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        thickness = 1.dp,
                     )
                 }
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp),
-                    thickness = 1.dp,
-                )
             }
         }
     }
@@ -143,23 +161,31 @@ private fun BookItem(
     book: Book,
     modifier: Modifier = Modifier,
 ) {
+    val authorsString = book.authors?.joinToString(separator = ", ")
+
     Column(
-        modifier, verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         ImageLoader(
             imageUrl = book.smallImageUrl,
             context = LocalContext.current,
             modifier = Modifier.size(60.dp, 100.dp)
         )
-        Text(text = book.title)
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            book.authors?.onEach { author ->
-                Text(text = author)
-            }
+        Text(
+            text = book.title,
+            fontWeight = FontWeight.Bold,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        authorsString?.let {
+            Text(
+                text = "저자 : ${authorsString}",
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
-        book.publisher?.let { Text(text = it) }
+        book.publisher?.let { Text(text = "출판사 : ${it}") }
     }
 }
 

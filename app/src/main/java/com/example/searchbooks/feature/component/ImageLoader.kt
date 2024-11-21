@@ -34,7 +34,7 @@ fun ImageLoader(
         Image(
             painter = painter,
             contentDescription = "책 표지 이미지",
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             modifier = Modifier.fillMaxSize()
         )
 
