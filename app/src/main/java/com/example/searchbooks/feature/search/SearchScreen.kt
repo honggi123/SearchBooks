@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,14 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.searchbooks.R
 import com.example.searchbooks.data.model.Book
 import com.example.searchbooks.feature.component.ImageLoader
 
@@ -36,7 +40,7 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val searchQuery = viewModel.searchQuery.collectAsStateWithLifecycle()
-    val books = viewModel.books.collectAsLazyPagingItems()
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = modifier
@@ -59,20 +63,49 @@ fun SearchScreen(
                     .padding(vertical = 6.dp),
                 thickness = 2.dp,
             )
-            if (searchQuery.value == null) {
-                NotYetSearchedContent(
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                SearchScreenContent(
-                    onBookClick = onBookClick,
-                    pagingItems = books,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
+            when (val state = uiState.value) {
+                is SearchUiState.Loading -> {
+                    LoadingContent(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                is SearchUiState.InputQuery -> {
+                    NotYetSearchedContent(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                is SearchUiState.Success -> {
+                    SearchScreenContent(
+                        onBookClick = onBookClick,
+                        uiState = state,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    )
+                }
+
+                is SearchUiState.Error -> Unit
             }
+
         }
+    }
+}
+
+@Composable
+private fun LoadingContent(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(20.dp), strokeWidth = 3.dp
+        )
     }
 }
 
@@ -87,7 +120,17 @@ private fun SearchInputField(
         value = searchQuery ?: "",
         onValueChange = onSearchTriggered,
         maxLines = 1,
-        modifier = modifier
+        modifier = modifier,
+        trailingIcon = {
+            if (!searchQuery.isNullOrEmpty()) {
+                IconButton(onClick = { onSearchTriggered("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_circle_cancle),
+                        contentDescription = "Clear text"
+                    )
+                }
+            }
+        }
     )
 }
 
@@ -107,9 +150,10 @@ private fun NotYetSearchedContent(
 @Composable
 private fun SearchScreenContent(
     onBookClick: (Book) -> Unit,
-    pagingItems: LazyPagingItems<Book>,
+    uiState: SearchUiState.Success,
     modifier: Modifier = Modifier
 ) {
+    val pagingItems = uiState.books.collectAsLazyPagingItems()
     val isEmpty =
         pagingItems.itemCount == 0 && pagingItems.loadState.refresh is LoadState.NotLoading
 

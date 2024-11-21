@@ -3,9 +3,9 @@ package com.example.searchbooks.feature.bookdetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.searchbooks.data.exception.AppException
 import com.example.searchbooks.data.model.Book
 import com.example.searchbooks.data.repository.BookRepository
-import com.example.searchbooks.exception.AppException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

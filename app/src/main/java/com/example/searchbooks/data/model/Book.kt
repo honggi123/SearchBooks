@@ -8,4 +8,7 @@ data class Book(
     val description: String? = null,
     val smallImageUrl: String? = null,
     val imageUrl: String? = null,
+    val price: Double? = null,
+    val retailPrice: Double? = null,
+    val buyUrl: String? = null,
 )

@@ -1,5 +1,7 @@
 package com.example.searchbooks.feature.bookdetail
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,14 +28,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.searchbooks.R
+import com.example.searchbooks.data.exception.AppException
 import com.example.searchbooks.data.model.Book
-import com.example.searchbooks.exception.AppException
 import com.example.searchbooks.feature.component.ImageLoader
+import java.text.DecimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -153,6 +158,8 @@ private fun DetailScreenContent(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val decimalFormat = DecimalFormat("#,###")
 
     Column(
         modifier = modifier.verticalScroll(scrollState),
@@ -166,14 +173,43 @@ private fun DetailScreenContent(
         Text(
             text = book.title,
             fontWeight = FontWeight.Bold,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.width(250.dp)
         )
         book.publisher?.let {
             Text(
                 text = book.publisher,
                 fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
             )
+        }
+        book.price?.let {
+            Text(
+                text = "정상가 : " + decimalFormat.format(it),
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
+        book.retailPrice?.let {
+            Text(
+                text = "할인가 : " + decimalFormat.format(it),
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
+        book.buyUrl?.let {
+            Button(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+                    context.startActivity(intent)
+                }
+            ) {
+                Text(
+                    text = "구매 링크",
+                    fontWeight = FontWeight.Medium,
+                )
+            }
         }
     }
 }

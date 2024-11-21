@@ -5,13 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.searchbooks.data.model.Book
 import com.example.searchbooks.data.repository.BookRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -25,21 +27,35 @@ class SearchViewModel @Inject constructor(
         savedStateHandle.getStateFlow<String?>(key = SEARCH_QUERY, initialValue = null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val books = searchQuery
-        .filterNotNull()
+    val uiState = searchQuery
         .debounce(300)
         .flatMapLatest { query ->
-            repository.getSearchBooks(query)
-                .cachedIn(viewModelScope)
+            if (query.isNullOrEmpty()) {
+                flowOf(SearchUiState.InputQuery)
+            } else {
+                val books = repository.getSearchBooks(query).cachedIn(viewModelScope)
+                flowOf(
+                    SearchUiState.Success(
+                        books = books
+                    )
+                )
+            }
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
-            PagingData.empty()
+            SearchUiState.Loading
         )
 
     fun onSearchTriggered(query: String) {
         savedStateHandle[SEARCH_QUERY] = query
     }
+}
+
+sealed class SearchUiState {
+    object InputQuery : SearchUiState()
+    object Loading : SearchUiState()
+    data class Success(val books: Flow<PagingData<Book>>) : SearchUiState()
+    data class Error(val exception: Exception) : SearchUiState()
 }
 
 private const val SEARCH_QUERY = "searchQuery"

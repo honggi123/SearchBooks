@@ -55,7 +55,7 @@ fun ImageLoader(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Text(text = "이미지 로딩 실패")
+                    
                 }
             }
 

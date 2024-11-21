@@ -1,6 +1,5 @@
 package com.example.searchbooks.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.searchbooks.data.network.GoogleService
@@ -29,15 +28,14 @@ class BooksPagingSource(
                 nextKey = if (response.items.isEmpty()) null else page + 1
             )
         } catch (e: Exception) {
-            Log.e("exception", e.message.toString())
             LoadResult.Error(e)
         }
     }
 
     override fun getRefreshKey(state: PagingState<Int, NetworkBook>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
-            // 새로고침할 때 이전 페이지를 보여줌
-            // TODO 주석
+            // 새로고침을 처리할 때, 가장 가까운 이전 페이지(prevKey)를 기준으로 새 데이터를 로드합니다.
+            // prevKey가 null인 경우, PagingSource는 기본 초기 키를 사용합니다.
             state.closestPageToPosition(anchorPosition)?.prevKey
         }
     }

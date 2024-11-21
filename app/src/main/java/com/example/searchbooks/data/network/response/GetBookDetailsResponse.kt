@@ -26,8 +26,3 @@ data class Price(
     val amount: Double,
     val currencyCode: String
 )
-
-@Serializable
-data class Epub(
-    val isAvailable: Boolean
-)
