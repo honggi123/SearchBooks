@@ -1,22 +1,24 @@
 # Skills
 mvvm, coroutine, flow, compose, Paging3, retrofit, hilt
 
-## 패키지 구조 
 
-- feature
-	- component
-	- search
-	- bookdetail
-- data
-	- repository
-		- impl
-	- network
-		- response
-	- model
-- di
+## 패키지 구조 
+```bash
+├── feature
+│   ├── component
+│   ├── search
+│   └── bookdetail
+├── data
+│   ├── repository
+│   ├── network
+│   ├── paging
+│   └── model
+└── di
+```
 
 ## 주요 화면 및 기능
-### 1. 도서 검색 화면 (feature/search)
+### 1. 도서 검색 화면 
+`feature/search`
 #### 1-1. 시스템에 의한 앱 프로세스 종료 대응 
   * savedStateHandle을 통한 검색 쿼리 저장
   * 종료 후 앱 재시작 시, 이전 검색 쿼리 복원
@@ -39,7 +41,8 @@ mvvm, coroutine, flow, compose, Paging3, retrofit, hilt
   * 캐싱을 통해 같은 호출에 대해 재 호출 방지
 #### 1-7. 검색어 모두 지우기 기능 지원
 
-### 2. 디테일 화면 (feature/detail)
+### 2. 디테일 화면 
+`feature/detail`
 #### 2-1. 네트워크 오류 또는 미연결 오류처리
   * API 호출을 비동기적으로 처리하는 Flow에서 발생할 수 있는 예외를 catch 블록으로 캡처
   * 예외 발생 시 뷰모델에서 Custom Exception (NetworkException, ApiException, UnknownException) 분기
@@ -47,7 +50,8 @@ mvvm, coroutine, flow, compose, Paging3, retrofit, hilt
 
 
 ### 공통
-#### 3. 이미지 뷰 로딩 (ImageLoader.kt)
+#### 1. 이미지 뷰 로딩  
+`ImageLoader.kt - feature/component`
   * AsyncImagePainter의 상태를 관찰
   * rememberAsyncImagePainter을 통해 리컴포지션 시 이미지 재 로딩 방지
     
@@ -55,5 +59,6 @@ mvvm, coroutine, flow, compose, Paging3, retrofit, hilt
     * 로딩 실패 시 대체 이미지 표시.
     * 로딩 성공 시 이미지를 화면에 출력.
 
-#### 3-2. 데이터 레이어의 데이터 클래스 매핑
+#### 2. 데이터 레이어의 데이터 클래스 매핑
+`BookRepitoryImpl.kt - data/repository/impl`
   * repository 레이어에서 네트워크 모델(API 응답)을 UI 데이터 클래스로 매핑
