@@ -1,16 +1,19 @@
 # Skills
 Mvvm, Coroutine, Flow, Compose, Jetpack(ViewModel, Paging3), Retrofit, Hilt
 
+## 아키텍처
+<img width="612" alt="스크린샷 2024-11-22 오후 3 06 53" src="https://github.com/user-attachments/assets/8656f35e-fc20-48fd-a26e-7fa3ec6a7ebc">
+
+* TODO
+
 ## 패키지 구조 
 ```bash
 ├── feature
-│   ├── component
 │   ├── search
 │   └── bookdetail
 ├── data
 │   ├── repository
 │   ├── network
-│   ├── paging
 │   └── model
 └── di
 ```
@@ -59,7 +62,3 @@ Mvvm, Coroutine, Flow, Compose, Jetpack(ViewModel, Paging3), Retrofit, Hilt
     * 로딩 중 프로그레스바 표시.
     * 로딩 실패 시 대체 이미지 표시.
     * 로딩 성공 시 이미지를 화면에 출력.
-
-#### 2. 데이터 레이어의 데이터 클래스 매핑
-`BookRepitoryImpl.kt - data/repository/impl`
-  * repository 레이어에서 네트워크 모델(API 응답)을 UI 데이터 클래스로 매핑
