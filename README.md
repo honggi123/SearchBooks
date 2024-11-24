@@ -71,3 +71,8 @@ Mvvm, Coroutine, Flow, Compose, Jetpack(ViewModel, Paging3), Retrofit, Hilt
     * 로딩 중 프로그레스바 표시.
     * 로딩 실패 시 대체 이미지 표시.
     * 로딩 성공 시 이미지를 화면에 출력.
+   
+## 실행
+![Screen_Recording_20241121_203116_SearchBooks-ezgif com-optimize](https://github.com/user-attachments/assets/80b7f858-8a90-40ea-869e-fdbacfcb5a1e)
+
+
