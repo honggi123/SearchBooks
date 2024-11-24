@@ -17,6 +17,7 @@ Mvvm, Coroutine, Flow, Compose, Jetpack(ViewModel, Paging3), Retrofit, Hilt
 ## 패키지 구조 
 ```bash
 ├── feature
+│   ├── component
 │   ├── search
 │   └── bookdetail
 ├── data
