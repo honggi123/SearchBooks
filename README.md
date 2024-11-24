@@ -4,7 +4,15 @@ Mvvm, Coroutine, Flow, Compose, Jetpack(ViewModel, Paging3), Retrofit, Hilt
 ## 아키텍처
 <img width="612" alt="스크린샷 2024-11-22 오후 3 06 53" src="https://github.com/user-attachments/assets/8656f35e-fc20-48fd-a26e-7fa3ec6a7ebc">
 
-* TODO
+#### View → ViewModel → Model 
+1. View에서 이벤트가 발생하면, ViewModel이 해당 이벤트 처리. 
+2. 필요에 따라 Data Layer (Model) 에 데이터 요청.
+3. Data Layer에서 반환된 결과는 ViewModel에서 UI 상태(UI State)로 변환되어 View에 제공.
+ 
+#### Mvvm 패턴
+* UI로 부터 비즈니스, UI 로직 분리
+* UI와 비즈니스, UI 로직을 독립적으로 개발 가능, UI 변경에 모델과 뷰모델 변경 최소화
+* Jetpack ViewModel 활용, 뷰의 라이프사이클과 독립적으로 데이터 유지 (ex. 화면 회전)
 
 ## 패키지 구조 
 ```bash
