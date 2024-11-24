@@ -36,7 +36,7 @@ class BookDetailViewModel @Inject constructor(
                 emit(mapUiStateException(exception))
             }.stateIn(
                 viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
+                SharingStarted.Lazily,
                 BookDetailUiState.Loading
             )
 

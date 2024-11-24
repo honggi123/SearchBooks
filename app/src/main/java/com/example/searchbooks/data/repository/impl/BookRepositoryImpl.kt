@@ -1,6 +1,5 @@
 package com.example.searchbooks.data.repository.impl
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -43,10 +42,6 @@ class BookRepositoryImpl @Inject constructor(
 
     override suspend fun getBookById(id: String): Book {
         val response = googleService.getBookDetailsById(id)
-        Log.e("response", response.toString())
-
-        Log.e("price", response.saleInfo.retailPrice.toString())
-        Log.e("price", response.saleInfo.listPrice.toString())
 
         return Book(
             id = response.id,
